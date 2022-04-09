@@ -17,9 +17,14 @@ export const marsReducer = (
   action: Action
 ) => {
   const { type } = action;
+
   switch (type) {
     case ActionType.SetMarsSize:
       state.marsSize = { ...action.payload };
+      return state;
+    case ActionType.SetRobot:
+      if (!state.marsSize) return {};
+      state.robot = { ...action.payload };
       return state;
     default:
       console.log(`Action ${type} not found`);
