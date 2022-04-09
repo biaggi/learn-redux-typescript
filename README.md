@@ -1,2 +1,5 @@
 # learn-redux-typescript
-redux with typescript in node
+
+Redux with typescript in node
+
+Using eslint and prettier-vscode vs code extensions
