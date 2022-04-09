@@ -4,10 +4,10 @@
   "description": "redux with typescript in node",
   "main": "index.js",
   "scripts": {
-    "lint": "npx eslint src/**/*.ts",
     "prettier": "npx prettier --write src/**/*.ts",
     "test": "npx ts-mocha src/**/*.ts",
-    "build": "npx babel --out-file bundle.js src/reducer/marsReducer.ts"
+    "babel": "npx babel src --out-dir dist --extensions '.ts'",
+    "build": "npm run prettier && npm run test && npm run babel"
   },
   "repository": {
     "type": "git",
