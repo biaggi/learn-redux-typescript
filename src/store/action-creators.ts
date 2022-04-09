@@ -4,6 +4,7 @@ import {
   ActionSetRobot,
   Orientation,
   ActionMoveRobotLeft,
+  ActionMoveRobotRight
 } from './action-types';
 
 export const setMarsSize = (marSize: {
@@ -30,5 +31,11 @@ export const setRobot = (robot: {
 export const moveRobotLeft = (): ActionMoveRobotLeft => {
   return {
     type: ActionType.MoveRobotLeft,
+  };
+};
+
+export const moveRobotRight = (): ActionMoveRobotRight => {
+  return {
+    type: ActionType.MoveRobotRight,
   };
 };

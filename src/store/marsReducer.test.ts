@@ -1,5 +1,5 @@
 import { marsReducer, MarsState } from './marsReducer';
-import { moveRobotLeft, setMarsSize, setRobot } from './action-creators';
+import { moveRobotLeft, moveRobotRight, setMarsSize, setRobot } from './action-creators';
 import assert from 'assert';
 import { Orientation } from './action-types';
 const setupMarsAndRobot = () => {
@@ -43,5 +43,10 @@ describe('Mars Reducer', () => {
     let { state, robot } = setupMarsAndRobot();
     state = marsReducer(state, moveRobotLeft());
     assert.equal(state.robot?.orientation, Orientation.East);
+  });
+  it('can let a robot move right', () => {
+    let { state, robot } = setupMarsAndRobot();
+    state = marsReducer(state, moveRobotRight());
+    assert.equal(state.robot?.orientation, Orientation.West);
   });
 });

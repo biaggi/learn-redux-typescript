@@ -13,11 +13,12 @@ export interface MarsState {
 const initialState: MarsState = {};
 const MAXSIZE = 50;
 
-export const marsReducer = (
-  state: MarsState = initialState,
-  action: Action
-) => {
-  const { type } = action;
+enum Direction {
+  LEFT,
+  RIGHT,
+}
+
+const moveRobot = (state: MarsState, direction: Direction) => {
   const orientations = [
     Orientation.West,
     Orientation.North,
@@ -26,6 +27,23 @@ export const marsReducer = (
     Orientation.East,
     Orientation.North,
   ];
+  if (!state.robot) {
+    return state;
+  }
+  const currentOrientation = state.robot?.orientation;
+  const index = orientations.indexOf(currentOrientation);
+  const nextOrientation = Direction.LEFT === direction
+    ? orientations[index + 1]
+    : orientations[index - 1];
+  state.robot.orientation = nextOrientation;
+  return state;
+};
+
+export const marsReducer = (
+  state: MarsState = initialState,
+  action: Action
+) => {
+  const { type } = action;
   switch (type) {
     case ActionType.SetMarsSize:
       const { x, y } = action.payload;
@@ -37,13 +55,9 @@ export const marsReducer = (
       state.robot = { ...action.payload };
       return state;
     case ActionType.MoveRobotLeft:
-      if (!state.robot) {
-        return state;
-      }
-      const currentOrientation = state.robot?.orientation;
-      const index = orientations.indexOf(currentOrientation)
-      state.robot.orientation = orientations[index + 1]
-      return state;
+      return moveRobot(state, Direction.LEFT);
+    case ActionType.MoveRobotRight:
+      return moveRobot(state, Direction.RIGHT);
     default:
       console.log(`Action ${type} not found`);
   }
