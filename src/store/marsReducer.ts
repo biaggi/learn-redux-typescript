@@ -11,6 +11,7 @@ export interface MarsState {
 }
 
 const initialState: MarsState = {};
+const MAXSIZE = 50;
 
 export const marsReducer = (
   state: MarsState = initialState,
@@ -20,7 +21,9 @@ export const marsReducer = (
 
   switch (type) {
     case ActionType.SetMarsSize:
-      state.marsSize = { ...action.payload };
+      const { x, y } = action.payload;
+      const checkSize = (value: number) => (value > MAXSIZE ? MAXSIZE : value);
+      state.marsSize = { x: checkSize(x), y: checkSize(y) };
       return state;
     case ActionType.SetRobot:
       if (!state.marsSize) return {};

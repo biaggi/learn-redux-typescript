@@ -8,6 +8,11 @@ describe('Mars Reducer', () => {
     assert.equal(state.marsSize?.x, 5);
     assert.equal(state.marsSize?.y, 3);
   });
+  it('cannot create mars bigger than 50', () => {
+    const state = marsReducer({}, setMarsSize({ x: 55, y: 55 }));
+    assert.equal(state.marsSize?.x, 50);
+    assert.equal(state.marsSize?.y, 50);
+  });
   it('cannot invite a robot to walk through mars if there is no mars', () => {
     const state = marsReducer(
       {},
