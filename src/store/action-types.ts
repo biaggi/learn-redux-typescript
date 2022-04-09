@@ -1,6 +1,7 @@
 export enum ActionType {
   SetMarsSize = '@mars/SetMarsSize',
   SetRobot = '@mars/SetRobot',
+  MoveRobotLeft = '@mars/robot/left',
 }
 
 export interface ActionSetMarsSize {
@@ -24,4 +25,8 @@ export interface ActionSetRobot {
   };
 }
 
-export type Action = ActionSetMarsSize | ActionSetRobot;
+export interface ActionMoveRobotLeft {
+  type: ActionType.MoveRobotLeft;
+}
+
+export type Action = ActionSetMarsSize | ActionSetRobot | ActionMoveRobotLeft;

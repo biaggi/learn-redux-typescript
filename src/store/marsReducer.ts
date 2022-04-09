@@ -1,4 +1,4 @@
-import { Action, ActionType } from './action-types';
+import { Action, ActionType, Orientation } from './action-types';
 
 export interface MarsState {
   marsSize?: { x: number; y: number };
@@ -6,7 +6,7 @@ export interface MarsState {
   robot?: {
     position: { x: number; y: number };
     isLost: boolean;
-    //    facing: OrientationEnum;
+    orientation: Orientation;
   };
 }
 
@@ -18,7 +18,14 @@ export const marsReducer = (
   action: Action
 ) => {
   const { type } = action;
-
+  const orientations = [
+    Orientation.West,
+    Orientation.North,
+    Orientation.East,
+    Orientation.South,
+    Orientation.East,
+    Orientation.North,
+  ];
   switch (type) {
     case ActionType.SetMarsSize:
       const { x, y } = action.payload;
@@ -28,6 +35,14 @@ export const marsReducer = (
     case ActionType.SetRobot:
       if (!state.marsSize) return {};
       state.robot = { ...action.payload };
+      return state;
+    case ActionType.MoveRobotLeft:
+      if (!state.robot) {
+        return state;
+      }
+      const currentOrientation = state.robot?.orientation;
+      const index = orientations.indexOf(currentOrientation)
+      state.robot.orientation = orientations[index + 1]
       return state;
     default:
       console.log(`Action ${type} not found`);
