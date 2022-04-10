@@ -1,10 +1,11 @@
+import { Orientation } from './marsReducer';
 import {
   ActionType,
   ActionSetMarsSize,
   ActionSetRobot,
-  Orientation,
   ActionMoveRobotLeft,
-  ActionMoveRobotRight
+  ActionMoveRobotRight,
+  ActionMoveRobotFront,
 } from './action-types';
 
 export const setMarsSize = (marSize: {
@@ -37,5 +38,11 @@ export const moveRobotLeft = (): ActionMoveRobotLeft => {
 export const moveRobotRight = (): ActionMoveRobotRight => {
   return {
     type: ActionType.MoveRobotRight,
+  };
+};
+
+export const moveRobotFront = (): ActionMoveRobotFront => {
+  return {
+    type: ActionType.MoveRobotFront,
   };
 };
