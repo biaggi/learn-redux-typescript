@@ -37,14 +37,10 @@ const sendRobot = (
   text: string
 ) => {
   return new Promise<void>((resolve) => {
-    console.log('begin', text);
     // first robot
-    console.log('sending', initial, path);
     store.dispatch(setRobot(initial));
     store.dispatch(moveRobot(path)).then((data) => {
-      console.log('done moveRobot', JSON.stringify(store.getState()));
       assert.deepStrictEqual(store.getState().mars.robot, expected, text);
-      console.log('resolve');
       resolve();
     });
   });
@@ -138,7 +134,6 @@ describe('Mars Reducer', () => {
       'error on first robot'
     );
 
-    console.log('segundo');
     // second robot
     await sendRobot(
       {
@@ -154,7 +149,7 @@ describe('Mars Reducer', () => {
       },
       'error on second robot'
     );
-    console.log('tercero');
+
     // third robot
     await sendRobot(
       {
@@ -170,6 +165,78 @@ describe('Mars Reducer', () => {
       },
       'error on third robot'
     );
-    console.log('end');
+  });
+
+  it('can lost a robot', async () => {
+    store.dispatch(setMarsSize({ x: 3, y: 3 }));
+
+    const setRobotLostTest = async (
+      position: { x: number; y: number },
+      orientation: Orientation
+    ) => {
+      await sendRobot(
+        {
+          position: position,
+          orientation: orientation,
+          isLost: false,
+        },
+        'F',
+        {
+          position: position,
+          orientation: orientation,
+          isLost: true,
+        },
+        `robot heading ${orientation} should be lost`
+      );
+    };
+
+    await setRobotLostTest({ x: 0, y: 3 }, Orientation.North);
+    await setRobotLostTest({ x: 0, y: 0 }, Orientation.South);
+    await setRobotLostTest({ x: 3, y: 0 }, Orientation.East);
+    await setRobotLostTest({ x: 0, y: 2 }, Orientation.West);
+  });
+
+  it('can not lost a second robot', async () => {
+    store.dispatch(setMarsSize({ x: 1, y: 1 }));
+
+    const setTwoRobotsLostTest = async (
+      position: { x: number; y: number },
+      orientation: Orientation
+    ) => {
+      await sendRobot(
+        {
+          position: position,
+          orientation: orientation,
+          isLost: false,
+        },
+        'F',
+        {
+          position: position,
+          orientation: orientation,
+          isLost: true,
+        },
+        `robot heading ${orientation} should be lost`
+      );
+
+      await sendRobot(
+        {
+          position: position,
+          orientation: orientation,
+          isLost: false,
+        },
+        'F',
+        {
+          position: position,
+          orientation: orientation,
+          isLost: false,
+        },
+        `robot heading ${orientation} should NOT be lost`
+      );
+    };
+
+    await setTwoRobotsLostTest({ x: 0, y: 3 }, Orientation.North);
+    await setTwoRobotsLostTest({ x: 0, y: 0 }, Orientation.South);
+    await setTwoRobotsLostTest({ x: 3, y: 0 }, Orientation.East);
+    await setTwoRobotsLostTest({ x: 0, y: 2 }, Orientation.West);
   });
 });

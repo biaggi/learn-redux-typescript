@@ -23,10 +23,6 @@ export const setMarsSize = (marSize: {
 };
 
 export const setRobot = (robot: Robot): ActionSetRobot => {
-  console.log('action creator', {
-    type: ActionType.SetRobot,
-    payload: { ...robot },
-  });
   return {
     type: ActionType.SetRobot,
     payload: { ...robot },
@@ -95,9 +91,17 @@ export const moveRobot = createAsyncThunk<void, string, { state: RootState }>(
             break;
           case 'F':
             if (isOutOfBounds(thunkApi.getState())) {
-              console.log('robot lost', JSON.stringify(thunkApi.getState()));
-              thunkApi.dispatch(setRobotLost());
-              reject(thunkApi.rejectWithValue('LOST'));
+              const { mars } = thunkApi.getState();
+              if (!mars.robot) return reject();
+              const { position } = mars.robot;
+              const { lostRobots } = mars;
+              const alreadyLost = lostRobots?.find(
+                (pos) => pos.x === position.x && pos.y === position.y
+              );
+              if (!alreadyLost) {
+                thunkApi.dispatch(setRobotLost());
+                reject(thunkApi.rejectWithValue('LOST'));
+              }
               return false;
             }
             thunkApi.dispatch(moveRobotFront());
@@ -105,10 +109,6 @@ export const moveRobot = createAsyncThunk<void, string, { state: RootState }>(
           default:
             console.log('option not found, skipping', order);
         }
-        console.log(
-          'robot current position',
-          JSON.stringify(thunkApi.getState())
-        );
         return true;
       });
       resolve();

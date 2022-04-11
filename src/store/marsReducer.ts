@@ -9,6 +9,10 @@ export enum Orientation {
 }
 
 const MAXSIZE = 50;
+export interface Position {
+  x: number;
+  y: number;
+}
 export interface Robot {
   position: { x: number; y: number };
   isLost: boolean;
@@ -18,11 +22,11 @@ export interface Robot {
 
 export interface MarsState {
   marsSize?: { x: number; y: number };
-  lostRobots?: { x: number; y: number }[];
+  lostRobots?: Position[];
   robot?: Robot;
 }
 
-export const initialState: MarsState = {};
+export const initialState: MarsState = { lostRobots: [] };
 
 enum Direction {
   LEFT,
@@ -55,7 +59,6 @@ export const marsReducer = (
   action: Action
 ): MarsState => {
   const { type } = action;
-  console.log(action);
 
   switch (type) {
     // resets mars
@@ -68,10 +71,8 @@ export const marsReducer = (
       };
     case ActionType.SetRobot:
       if (!state.marsSize) {
-        console.log('world not initialized');
         return {};
       }
-      console.log('setrobot', { ...state, robot: { ...action.payload } });
       return { ...state, robot: { ...action.payload } };
     case ActionType.MoveRobotLeft:
       // if no robot, return state
@@ -84,7 +85,16 @@ export const marsReducer = (
     case ActionType.SetRobotLost:
       // if no robot, return state
       if (!state.robot) return state;
-      return { ...state, robot: { ...state.robot, isLost: true } };
+      return {
+        ...state,
+        lostRobots: state.lostRobots?.concat(state.robot.position),
+        robot: {
+          ...state.robot,
+          isLost: true,
+        },
+      };
+    case ActionType.MoveRobotPending:
+      return state;
     case ActionType.MoveRobotFront:
       // if no robot, return state
       if (!state.robot || !state.marsSize) return state;
@@ -129,7 +139,7 @@ export const marsReducer = (
           console.log('Id like to know how can this happen', orientation);
       }
     default:
-      console.log(`Action ${type} not found`);
+      console.log(`Action ${type} not implemented`);
   }
   return state;
 };

@@ -9,7 +9,7 @@ export enum ActionType {
   MoveRobotRight = '@mars/robot/right',
   MoveRobotFront = '@mars/robot/front',
   MoveRobot = '@mars/robot/move',
-  MoveRobotPending = '@mars/robot/move/pending',
+  MoveRobotPending = '@mars/robot/move/rejected',
 }
 import { Robot } from './marsReducer';
 
@@ -39,6 +39,10 @@ export interface ActionMoveRobotFront {
   type: ActionType.MoveRobotFront;
 }
 
+export interface ActionMoveRobotPending {
+  type: ActionType.MoveRobotPending;
+}
+
 export interface ActionMoveRobot {
   type: ActionType.MoveRobot;
   payload: {
@@ -53,4 +57,5 @@ export type Action =
   | ActionMoveRobotRight
   | ActionMoveRobotFront
   | ActionMoveRobot
-  | ActionSetRobotLost;
+  | ActionSetRobotLost
+  | ActionMoveRobotPending;
