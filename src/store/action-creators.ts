@@ -35,7 +35,7 @@ export const setRobot = (robot: Robot): ActionSetRobot => {
 
 export const setRobotLost = (): ActionSetRobotLost => {
   return {
-    type: ActionType.SetRobotLost
+    type: ActionType.SetRobotLost,
   };
 };
 
@@ -96,7 +96,7 @@ export const moveRobot = createAsyncThunk<void, string, { state: RootState }>(
           case 'F':
             if (isOutOfBounds(thunkApi.getState())) {
               console.log('robot lost', JSON.stringify(thunkApi.getState()));
-              thunkApi.dispatch(setRobotLost())
+              thunkApi.dispatch(setRobotLost());
               reject(thunkApi.rejectWithValue('LOST'));
               return false;
             }

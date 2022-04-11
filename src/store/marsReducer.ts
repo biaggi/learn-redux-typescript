@@ -84,13 +84,12 @@ export const marsReducer = (
     case ActionType.SetRobotLost:
       // if no robot, return state
       if (!state.robot) return state;
-      return {...state, robot: {...state.robot, isLost: true}};
+      return { ...state, robot: { ...state.robot, isLost: true } };
     case ActionType.MoveRobotFront:
       // if no robot, return state
       if (!state.robot || !state.marsSize) return state;
       const { position, orientation } = state.robot;
       if (!position) return state;
-
 
       // otherwise, just move
       switch (orientation) {
